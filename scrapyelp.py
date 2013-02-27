@@ -7,6 +7,10 @@ from lxml.html import parse
 #class to represent review information
 #
 class Review:
+	
+	def __init__(self, docid):
+		self.reviewId = docid
+	
 	#reviewers name
 	def setReviewerName(self, name):
 		self.reviewer_name = name
@@ -44,12 +48,38 @@ class Review:
 	def setReviewRating(self, value):
 		self.review_rating = value
 
+	def setReviewURL(self, value):
+		self.reviewURL = value;
+
 	def printReview(self):
 		print self.reviewer_name
 		print self.reviewer_profile_URL
 		print self.review_rating
 		print self.review_date
 		print self.review_text
+
+	def serializeToXML(self):
+		temp = []
+		temp.append('<doc id=' + str(self.reviewId) + '>')
+		temp.append('<stars>' + str(self.review_rating) + '</stars>')
+		temp.append('<url>' + self.reviewURL + '</url>')
+		temp.append('<date>' + self.review_date + '</date>')
+		temp.append('<user>' + self.reviewer_profile_URL + '</user>')
+		#temp.append('<title/>')
+		temp.append('<review>' + self.review_text + '</review>')
+		temp.append('<polarity>NULL</polarity>')
+		temp.append('<confidence></confidence>')
+		temp.append('</doc>')
+		return '\n'.join(temp)
+
+
+#
+#
+# CRAWLER CODE BELOW THIS
+#
+
+
+		
 		
 #
 #populates reviewer information
@@ -112,6 +142,17 @@ def populateReviewerInfo(reviewObj, element):
 
 	reviewObj.setReviewsCount(friendCount)
 
+    # review URL
+    #for x in element.cssselect('.externalReview .reviewer-details .user-stats .review-count'):
+    #   print html.tostring(x, method='text', encoding='unicode').strip()   
+
+	tempList = element.cssselect('.externalReview .externalReviewActions a.i-orange-link-common-wrap')
+	reviewURL = ''
+	if (len(tempList) > 0):
+		reviewURL = "http://www.yelp.com" + tempList[0].get('href')
+
+	reviewObj.setReviewURL(reviewURL)
+
 	# rating
 	#for x in element.cssselect('.externalReview .review-meta .rating meta'):
 	#	print x.get('content')
@@ -155,19 +196,35 @@ def myparser(reviewObj, element):
     
 	reviewObj.setReviewRating(rating)
 
-
+file_location = "../reviews.xml"
 
 if __name__ == '__main__':
 	hotel_url= ['http://www.yelp.com/biz/morimoto-new-york']   
 	#web_page= parse(hotel_url[0]).getroot()
 	#for all_reviews in web_page.cssselect('#bizReviews .externalReview'):
 	#	myparser(all_reviews)
+	
+	#variable to loop through pages
 	i=0
+	#variable to assign doc id to reviews
+	objCount = 1;
+	#we store our reviews temporarily in this before we write to file
+	buffer = []
+	#add <xml> to the buffer for the first time
+	buffer.append('<xml>')
+
 	while(i<=1360):
-		#print i
 		web_page= parse(hotel_url[0]+'?start='+str(i)).getroot()
-		for all_reviews in web_page.cssselect('#bizReviews .externalReview'):
-			obj = Review()
-			myparser(obj, all_reviews)
-			obj.printReview()
+		for review in web_page.cssselect('#bizReviews .externalReview'):
+			obj = Review(objCount)
+			myparser(obj, review)
+			buffer.append(obj.serializeToXML())
+			objCount += 1
 		i=i+40
+	buffer.append('</xml>')
+
+	print len(buffer)
+
+	#write reviews to xml file
+	f = open(file_location, 'w')
+	f.write('\n'.join(buffer).encode('utf-8').strip())
