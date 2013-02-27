@@ -49,3 +49,10 @@ if __name__ == '__main__':
 	web_page= parse(hotel_url[0]).getroot()
 	for all_reviews in web_page.cssselect('#bizReviews .externalReview'):
 		myparser(all_reviews)
+	i=0
+	while(i<=1360):
+		print i
+		web_page= parse(hotel_url[0]+'?start='+str(i)).getroot()
+		for all_reviews in web_page.cssselect('#bizReviews .externalReview'):
+			myparser(all_reviews)
+		i=i+40
