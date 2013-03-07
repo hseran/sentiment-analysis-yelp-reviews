@@ -1,4 +1,4 @@
-
+import time
 import lxml.html
 from lxml import html
 from lxml.html import parse
@@ -60,7 +60,7 @@ class Review:
 
 	def serializeToXML(self):
 		temp = []
-		temp.append('<doc id=' + str(self.reviewId) + '>')
+		temp.append('<doc id="' + str(self.reviewId) + '">')
 		temp.append('<stars>' + str(self.review_rating) + '</stars>')
 		temp.append('<url>' + self.reviewURL + '</url>')
 		temp.append('<date>' + self.review_date + '</date>')
@@ -197,6 +197,9 @@ def myparser(reviewObj, element):
 	reviewObj.setReviewRating(rating)
 
 file_location = "../reviews.xml"
+high_rating_location = "../high-rating-reviews.xml"
+low_rating_location = "../low-rating-reviews.xml"
+mid_rating_location = "../mid-rating-reviews.xml"
 
 if __name__ == '__main__':
 	hotel_url= ['http://www.yelp.com/biz/morimoto-new-york']   
@@ -207,11 +210,20 @@ if __name__ == '__main__':
 	#variable to loop through pages
 	i=0
 	#variable to assign doc id to reviews
-	objCount = 1;
+	objCount = 1
+	hCount = 0
+	mCount = 0
+	lCount = 0
 	#we store our reviews temporarily in this before we write to file
 	buffer = []
+	hBuffer = []
+	lBuffer = []
+	mBuffer = []
 	#add <xml> to the buffer for the first time
 	buffer.append('<xml>')
+	hBuffer.append('<xml>')
+	lBuffer.append('<xml>')
+	mBuffer.append('<xml>')
 
 	while(i<=1360):
 		web_page= parse(hotel_url[0]+'?start='+str(i)).getroot()
@@ -219,12 +231,35 @@ if __name__ == '__main__':
 			obj = Review(objCount)
 			myparser(obj, review)
 			buffer.append(obj.serializeToXML())
+			if float(obj.review_rating) > 3:
+				hBuffer.append(obj.serializeToXML())
+				hCount += 1
+			elif float(obj.review_rating) < 3:
+				lBuffer.append(obj.serializeToXML())
+				lCount += 1
+			else:
+				mBuffer.append(obj.serializeToXML())
+				mCount += 1
 			objCount += 1
 		i=i+40
+		print objCount
+		time.sleep(10)
 	buffer.append('</xml>')
-
-	print len(buffer)
-
+	hBuffer.append('</xml>')
+	lBuffer.append('</xml>')
+	mBuffer.append('</xml>')
 	#write reviews to xml file
 	f = open(file_location, 'w')
 	f.write('\n'.join(buffer).encode('utf-8').strip())
+	f.close()
+	f = open(high_rating_location, 'w')
+	f.write('\n'.join(hBuffer).encode('utf-8').strip())
+	f.close()
+	f = open(low_rating_location, 'w')
+	f.write('\n'.join(lBuffer).encode('utf-8').strip())
+	f.close()
+	f = open(mid_rating_location, 'w')
+	f.write('\n'.join(mBuffer).encode('utf-8').strip())
+	f.close()
+	print "high: " + str(hCount) + " low: " + str(lCount) + " mid: " + str(mCount)
+
