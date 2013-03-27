@@ -6,7 +6,18 @@ class Review:
 	
 	def __init__(self, docid):
 		self.reviewId = docid
-	
+		self.polarity = None
+		self.confidence = None
+		self.reviewer_name = None
+		self.reviewer_friends = 0
+		self.reviewer_review_count = 0
+		self.reviewer_profile_URL = None
+		self.review_date = None
+		self.review_text = None
+		self.reviewer_location = None
+		self.review_rating = 0
+		self.reviewURL = None
+
 	#reviewers name
 	def setReviewerName(self, name):
 		self.reviewer_name = name
