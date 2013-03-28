@@ -2,7 +2,7 @@ from lxml import etree
 #
 #class to represent review information
 #
-class Review:
+class Review(object):
 	
 	def __init__(self, docid):
 		self.reviewId = docid
@@ -101,9 +101,6 @@ class Review:
 			root = etree.parse(xmlfile)
 		except IOError as e:
 			print "I/O error({0}): {1}".format(e.errno, e.strerror)
-			return
-		except XMLSyntaxError:
-			print "XML Syntax error"
 			return
 		#list to store all reviews
 		reviews = []
