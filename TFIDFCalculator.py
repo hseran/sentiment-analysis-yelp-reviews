@@ -70,11 +70,20 @@ class TFIDFCalculator(object):
                 #normalize by dividing with max_freq
                 token_map[token] = float(freq) / float(max_freq) * float(idf)
 
+
     def get_tfidf(self, docId, token):
+        ''' returns tf-idf value'''
         if docId in self.tfidf_map:
             if token in self.tfidf_map[docId]:
                 return self.tfidf_map[docId][token]
-        return None
+        return 0
+    
+    def get_tf(self, docId, token):
+        '''returns term frequency'''
+        if docId in self.doc_term_freq:
+            if token in self.doc_term_freq[docId]:
+                return self.doc_term_freq[docId][token]
+        return 0
     
 if __name__ == '__main__':
     documents = {1:"hello i do not do like this".split(), 2:"world i like this this this this".split(), 3:"do you this".split()}

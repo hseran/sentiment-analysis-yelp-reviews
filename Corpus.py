@@ -3,7 +3,6 @@ Created on Apr 5, 2013
 
 @author: naresh
 '''
-from Review import Review
 from ReviewFeature import ReviewFeature
 
 class Corpus(object):
