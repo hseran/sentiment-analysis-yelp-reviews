@@ -99,6 +99,7 @@ def myparser(reviewObj, element):
     
 	reviewObj.setReviewRating(rating)
 
+#global variables
 file_location = "../reviews.xml"
 high_rating_location = "../high-rating-reviews.xml"
 low_rating_location = "../low-rating-reviews.xml"
@@ -121,7 +122,7 @@ if __name__ == '__main__':
 	mBuffer = []
 
 	#crawl in a loop
-	while(i<=1000):
+	while(i<=1500):
 		web_page= parse(hotel_url[0]+'?start='+str(i)).getroot()
 		for review in web_page.cssselect('#bizReviews .externalReview'):
 			obj = Review(objCount)

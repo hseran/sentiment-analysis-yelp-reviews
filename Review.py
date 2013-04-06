@@ -18,6 +18,18 @@ class Review(object):
 		self.review_rating = 0
 		self.reviewURL = None
 
+	def getReviewId(self):
+		return self.reviewId
+
+	def getReviewText(self):
+		return self.review_text
+	
+	def getReviewPolarity(self):
+		return self.polarity
+	
+	def getReviewConfidence(self):
+		return self.confidence
+	
 	#reviewers name
 	def setReviewerName(self, name):
 		self.reviewer_name = name
@@ -88,9 +100,9 @@ class Review(object):
 			rev = etree.SubElement(doc, 'review')
 			rev.text = review.review_text
 			polarity = etree.SubElement(doc, 'polarity')
-			polarity.text = review.polarity
+			polarity.text = review.polarity if review.polarity != None else ""
 			confidence = etree.SubElement(doc, 'confidence')
-			confidence.text = review.confidence
+			confidence.text = review.confidence if review.confidence != None else ""
 
 		out = open(outputfile, 'w')
 		xml.write(out, xml_declaration=True, encoding='utf-16', pretty_print=True)
