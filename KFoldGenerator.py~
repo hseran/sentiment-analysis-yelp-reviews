@@ -79,7 +79,7 @@ class KFoldGenerator(object):
             generator = FeatureGenerator(trainCorpus, dictionary, Feature.TFIDF, outdir + '/train' + str(i) + '.csv')
             generator.generateFeatures()
             
-            validCorpus = Corpus(validationData[str(i)], lemmatizer, POS_tagging);
+            validCorpus = Corpus(trainingData[str(i)], lemmatizer, POS_tagging);
             generator = FeatureGenerator(validCorpus, dictionary, Feature.TFIDF, outdir + '/valid' + str(i) + '.csv')
             generator.generateFeatures()
             
