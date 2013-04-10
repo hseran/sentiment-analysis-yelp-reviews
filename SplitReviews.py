@@ -45,13 +45,8 @@ if __name__ == '__main__':
 			elif(each_review.getReviewPolarity() == "1"):
 				labeled_high.append(each_review)
 
-			
-			
-		
 	#reviews from 3 files are appended to lists, but they are unsorted. Hence sorting them here.
-	
-
-	
+		
 	unlabeled.sort(key = operator.attrgetter('reviewId'))
 	labeled_low.sort(key = operator.attrgetter('reviewId'))
 	labeled_mid.sort(key = operator.attrgetter('reviewId'))
@@ -61,7 +56,6 @@ if __name__ == '__main__':
 	labeled.extend(labeled_mid)
 	labeled.extend(labeled_high)
 	
-
 	#Saving to disk
 	
 	Review.serializeToXML(unlabeled,unlabeled_file)

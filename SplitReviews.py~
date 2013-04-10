@@ -71,6 +71,6 @@ if __name__ == '__main__':
 	print "Labeled-low: " +str(len(labeled_low))
 	print "Labeled-mid: " +str(len(labeled_mid))
 	print "Labeled-high: " +str(len(labeled_high))
-	print "Total-Labeled :"+str(len(labeled))
+	print "Total Labeled :"+str(len(labeled))
 	print "Unlabeled :"+str(len(unlabeled))
 
