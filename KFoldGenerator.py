@@ -3,11 +3,12 @@ Created on Apr 6, 2013
 
 @author: naresh
 '''
-
+import nltk
 from Review import Review
 from Dictionary import Dictionary
 from Corpus import Corpus
-from FeatureGenerator import *
+from FeatureGenerator import FeatureGenerator
+from FeatureWeight import FeatureWeight
 
 class KFoldGenerator(object):
     '''
@@ -61,7 +62,8 @@ class KFoldGenerator(object):
             validationData[str(i)] = validation
 
 
-    def generateFeatures(self, outdir, lemmatizer = None, POS_tagging = False):
+    def generateFolds(self, outdir, lemmatizer = None, POS_tagging = False, 
+                      weightScheme = FeatureWeight.PRESENCE, includeRating = False, includeDocLength = False):
         if self.reviews == None or len(self.reviews) == 0:
             print 'No data to work on'
             return
@@ -76,16 +78,21 @@ class KFoldGenerator(object):
             trainCorpus = Corpus(trainingData[str(i)], lemmatizer, POS_tagging)
             '''this dictionary will be used for both training and validation data'''
             dictionary = Dictionary(trainCorpus)
-            generator = FeatureGenerator(trainCorpus, dictionary, Feature.TFIDF, outdir + '/train' + str(i) + '.csv')
+            generator = FeatureGenerator(trainCorpus, dictionary, outdir + '/train' + str(i) + '.csv', 
+                                         weightScheme, includeRating, includeDocLength)
             generator.generateFeatures()
             
             validCorpus = Corpus(validationData[str(i)], lemmatizer, POS_tagging);
-            generator = FeatureGenerator(validCorpus, dictionary, Feature.TFIDF, outdir + '/valid' + str(i) + '.csv')
+            generator = FeatureGenerator(validCorpus, dictionary, outdir + '/valid' + str(i) + '.csv', 
+                                         weightScheme, includeRating, includeDocLength)
             generator.generateFeatures()
+
             
 if __name__ == '__main__':
-    reviews = Review.readReviewsFromXML("../test.xml")
+    reviews = Review.readReviewsFromXML("../old-training-shuffled.xml")
     lemmatizer = nltk.WordNetLemmatizer()
     print 'reviews: ' + str(len(reviews))
     kfg = KFoldGenerator(reviews, 10)
-    kfg.generateFeatures("../kfolds", lemmatizer, True)    
+    kfg.generateFolds("../kfolds/unigrams-lemma-POS-tfidf-doclen", lemmatizer, 
+                      POS_tagging = True, weightScheme = FeatureWeight.TFIDF,
+                      includeRating=False, includeDocLength=True)

@@ -26,12 +26,13 @@ class Dictionary(object):
         self.tokens.clear()
         for review_feat in corpus.getCorpus():
             for word in review_feat.getTokens():
+                temp = word.strip();
                 '''
                 if word starts with / then it has only POS tag and not the actual word. skip it
                 '''
-                if word.startswith('/'):
+                if temp.startswith('/') or temp == '':
                     continue
-                self.tokens.add(word)
+                self.tokens.add(temp)
                 i += 1
                 
         print "Actual number of words " + str(i) + "|  created dictionary with size " + str(len(self.tokens))

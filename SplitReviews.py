@@ -10,11 +10,11 @@ import operator
 if __name__ == '__main__':
 	
 	#input files
-	review_files = ["../high-rating-reviews.xml", "../low-rating-reviews.xml","../mid-rating-reviews.xml"]
+	review_files = ["../labeled-reviews.xml", "../unlabeled-reviews.xml"]
 	
 	#output files
-	unlabeled_file='../unlabeled-reviews.xml'
-	labeled_file='../labeled-reviews.xml'
+	unlabeled_file='../test-data.xml'
+	labeled_file='../traning-data.xml'
 	
 	#lists for labeled and unlabeled reviews
 	unlabeled=[]

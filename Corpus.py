@@ -7,7 +7,8 @@ from ReviewFeature import ReviewFeature
 
 class Corpus(object):
     '''
-    classdocs
+    This class represents a lists of reviews 
+    and knows how to process a review
     '''
     def __init__(self, reviewList, lemmatizer = None, POS_tagging = False):
         self.lemmatizer = lemmatizer
@@ -17,10 +18,15 @@ class Corpus(object):
         self.process()
 
     def processReview(self, review):
+        '''
+        this method processes Review in to ReviewFeature
+        '''
         review_text = review.getReviewText()
         review_polarity = review.getReviewPolarity()
         doc_id = review.getReviewId()
-        processed_review = ReviewFeature(doc_id, review_text, review_polarity, self.lemmatizer, self.POS_tagging)
+        rating = review.getReviewRating()
+        processed_review = ReviewFeature(doc_id, review_text, review_polarity, 
+                                         rating, self.lemmatizer, self.POS_tagging)
         return processed_review    
     
     def process(self):
