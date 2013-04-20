@@ -23,12 +23,19 @@ class ReviewFeature(object):
             Remove all non-alphanumeric characters in the individual tokens in any case
             '''
             
-            if (self.POS_tagging):
-                self.tokens.extend([re.sub(r'[^a-zA-Z0-9]','',(x if self.lemmatizer == None else self.lemmatizer.lemmatize(x, self.get_wordnet_pos(y)))).lower() 
-                                    + '/' + y for (x,y) in nltk.pos_tag(text)])
+            stopwords = []
+            if self.removeStopWords:
+                stopwords = nltk.corpus.stopwords.words('english')
+            
+            if self.POS_tagging:
+                self.tokens.extend([re.sub(r'[^a-zA-Z0-9]','',
+                                           (x if self.lemmatizer == None 
+                                            else self.lemmatizer.lemmatize(x, self.get_wordnet_pos(y)))).lower() 
+                                    + '/' + y for (x,y) in nltk.pos_tag(text) if x.lower() not in stopwords])
             else:
-                self.tokens.extend([re.sub(r'[^a-zA-Z0-9]','',(w if self.lemmatizer == None else self.lemmatizer.lemmatize(w))).lower() for w in text])
-    
+                self.tokens.extend([re.sub(r'[^a-zA-Z0-9]','',
+                                           (w if self.lemmatizer == None else self.lemmatizer.lemmatize(w))).lower() 
+                                    for w in text if w.lower() not in stopwords])
     '''
     convert upenn tree bank POS tags to wordnet POS tags 
     If we pass POS information as well to the lemmatizer, it will be more accurate
@@ -51,7 +58,7 @@ class ReviewFeature(object):
     set POS_tagging to true if we want to tag tokens with POS tags
     '''
     def __init__(self, doc_id, review_text, review_polarity, rating, 
-                 lemmatizer = None, POS_tagging = False):
+                 lemmatizer = None, POS_tagging = False, removeStopWords = False):
         '''
         Constructor
         '''
@@ -63,6 +70,7 @@ class ReviewFeature(object):
         self.polarity = review_polarity if review_polarity and review_polarity.strip() != "" else "?"
         self.lemmatizer = lemmatizer
         self.POS_tagging = POS_tagging
+        self.removeStopWords = removeStopWords
         self.docLength = 0
         self.processTokens()
     

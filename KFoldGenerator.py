@@ -93,6 +93,6 @@ if __name__ == '__main__':
     lemmatizer = nltk.WordNetLemmatizer()
     print 'reviews: ' + str(len(reviews))
     kfg = KFoldGenerator(reviews, 10)
-    kfg.generateFolds("../kfolds/unigrams-lemma-POS-tfidf-doclen", lemmatizer, 
-                      POS_tagging = True, weightScheme = FeatureWeight.TFIDF,
-                      includeRating=False, includeDocLength=True)
+    kfg.generateFolds("../kfolds/linearSVM/unigrams-lemma-POS-tf-no-stop", lemmatizer, 
+                      POS_tagging = True, weightScheme = FeatureWeight.TF,
+                      includeRating=False, includeDocLength=False)
