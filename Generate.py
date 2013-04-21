@@ -20,9 +20,9 @@ if __name__ == '__main__':
     trainCorpus = Corpus(trainingreviews, lemmatizer, POS_tagging = True)
     '''this dictionary will be used for both training and validation data'''
     dictionary = Dictionary(trainCorpus)
-    generator = FeatureGenerator(trainCorpus, dictionary, '../train.csv', weightScheme= FeatureWeight.TFIDF, includeRating = True, includeDocLength = True)
+    generator = FeatureGenerator(trainCorpus, dictionary, '../train.csv', weightScheme= FeatureWeight.TFIDF)
     generator.generateFeatures()
     
     testCorpus = Corpus(testReviews, lemmatizer, POS_tagging = True);
-    generator = FeatureGenerator(testCorpus, dictionary, '../test.csv',weightScheme= FeatureWeight.TFIDF, includeRating = True, includeDocLength = True)
+    generator = FeatureGenerator(testCorpus, dictionary, '../test.csv',weightScheme= FeatureWeight.TFIDF)
     generator.generateFeatures()
